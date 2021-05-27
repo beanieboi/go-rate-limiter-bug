@@ -8,10 +8,10 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     strategy:
       matrix:
-        go: [ '1.15', '1.16' ]
+        go: [ '1.15.11', '1.16.4' ]
     name: Go ${{ matrix.go }}
     steps:
       - uses: actions/checkout@v2
@@ -19,4 +19,4 @@ jobs:
         uses: actions/setup-go@v1
         with:
           go-version: ${{ matrix.go }}
-      - run: go test ./...
+      - run: go -timeout 30s test ./...
