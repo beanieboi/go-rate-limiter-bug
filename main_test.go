@@ -8,21 +8,14 @@ import (
 	"golang.org/x/time/rate"
 )
 
-func dispatchLimiter(duration time.Duration, numItems int) *rate.Limiter {
-	endTime := time.Now().Add(duration)
-	timeRemaining := time.Until(endTime)
-	dispatchInterval := time.Duration(int64(timeRemaining) / int64(numItems))
-	return rate.NewLimiter(rate.Every(dispatchInterval), 1)
-}
-
 func TestRateLimiter(t *testing.T) {
-	if testing.Short() {
-		t.Skip("skipping test in short mode.")
-	}
-
 	ctx := context.Background()
 	numItems := 300000
-	limiter := dispatchLimiter(10*time.Second, numItems)
+
+	endTime := time.Now().Add(10 * time.Second)
+	timeRemaining := time.Until(endTime)
+	dispatchInterval := time.Duration(int64(timeRemaining) / int64(numItems))
+	limiter := rate.NewLimiter(rate.Every(dispatchInterval), 1)
 
 	loopStart := time.Now()
 	for i := 0; i < numItems; i++ {
