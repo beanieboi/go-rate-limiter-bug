@@ -28,6 +28,6 @@ func TestRateLimiter(t *testing.T) {
 	duration := time.Since(loopStart)
 
 	if duration > 15*time.Second {
-		t.Errorf("expected execution time of less than 12, got: %v", duration)
+		t.Errorf("expected execution time of less than 15, got: %v", duration)
 	}
 }
