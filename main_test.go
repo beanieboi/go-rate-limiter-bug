@@ -11,11 +11,12 @@ import (
 func TestRateLimiter(t *testing.T) {
 	ctx := context.Background()
 	numItems := 300000
-	batchSize := 1000
+	burstBuffer := 2
 	endTime := time.Now().Add(10 * time.Second)
 	timeRemaining := time.Until(endTime)
-	dispatchInterval := time.Duration(int64(timeRemaining) / int64(numItems/batchSize))
-	limiter := rate.NewLimiter(rate.Every(dispatchInterval), batchSize)
+	dispatchInterval := time.Duration(int64(timeRemaining) / int64(numItems))
+	burst := int(time.Millisecond / dispatchInterval)
+	limiter := rate.NewLimiter(rate.Every(dispatchInterval), burst*burstBuffer)
 
 	loopStart := time.Now()
 	for i := 0; i < numItems; i++ {
